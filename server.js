@@ -1,5 +1,7 @@
 const http = require('http');
 const fs = require('fs');
+// lodash is a library that has a lot of useful functions
+const _ = require('lodash');
 
 
 
