@@ -17,7 +17,7 @@ const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'text/html');
 
     // le repertoire ou sont les vues
-    let path = './views/'; 
+    let path = './client&servers/views/'; 
     switch (req.url) {
         case '/':
             path += 'index.html';
@@ -27,6 +27,13 @@ const server = http.createServer((req, res) => {
         case '/about':
             path += 'about.html';
             res.statusCode = 200;
+            break;
+        case '/about-me':
+            // on veut faire une redirection, on change le satus code
+            res.statusCode = 301;
+            // on fait la redirection en utilisant setHeader
+            res.setHeader('Location', '/about');
+            res.end();
             break;
         default:
             path += '404.html';
