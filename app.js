@@ -4,6 +4,10 @@ const express = require('express');
 // on cré une instance de express app
 const app = express();
 
+//on veut dire qu'on veut utiliser ejs comme notre template engine
+app.set('view engine', 'ejs');
+
+
 // listen for requests 
 // cela renvoie un serveur qu'on peut utiliser pour des websockets
 app.listen(3000);
@@ -15,12 +19,20 @@ app.get('/', (req, res) => {
     // cela renvoie également un status code donc pas besoin de le definir
     //res.send('<p>Home Page</p>');
     // sendfile prend en deuxième argument le repertoire dans lequel le fichier est relatif
-    res.sendFile('./client&servers/views/index.html', {root: __dirname});
+    // on ne va pas send mais plus render 
+    //res.sendFile('./client&servers/views/index.html', {root: __dirname});
+    const blogs = [
+        {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.'},
+        {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.'},
+        {title: 'Link finds money', snippet: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.'},
+    ];
+    res.render('index', {title: 'Home', blogs});
 })
 
 app.get('/about', (req, res) => {
     //res.send('<p>About Page</p>');
-    res.sendFile('./client&servers/views/about.html', {root: __dirname});
+    res.render('about', {title: 'About'});
+    //res.sendFile('./client&servers/views/about.html', {root: __dirname});
 })
 
 // redirects
@@ -29,10 +41,15 @@ app.get('/about-us', (req, res) => {
     res.redirect('/about');
 })
 
+app.get('/blogs/create', (req, res) => {
+    res.render('create', {title: 'Create a new blog'});
+})
+
 // 404 page
 // il faut noter que use est utilisé plus pour les middlewares que pour les routes
 // le use va etre appelé pour chaque adresse mais uniquement quand on atteind ce point du code.
 // par contre express ne renvoie pas un code d'erreur
 app.use((req, res) => {
-    res.status(404).sendFile('./client&servers/views/404.html', {root: __dirname});
+    res.status(404).render('404', {title: '404'});
+    //res.status(404).sendFile('./client&servers/views/404.html', {root: __dirname});
 }) 
