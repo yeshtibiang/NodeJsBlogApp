@@ -43,48 +43,48 @@ app.use(express.static('public'));
 app.use(morgan('dev'))
 
 // mongoose et mongo sandbox routes
-app.get('/add-blog', (req, res) => {
-    // creer un nouveau document dans la collection blogs
-    const blog = new Blog({
-        title: 'Test Blog2',
-        snippet: 'This is a test blog2',
-        body: 'This is the body of the test blog2'
-    })
+// app.get('/add-blog', (req, res) => {
+//     // creer un nouveau document dans la collection blogs
+//     const blog = new Blog({
+//         title: 'Test Blog2',
+//         snippet: 'This is a test blog2',
+//         body: 'This is the body of the test blog2'
+//     })
 
-    // on sauvegarde le document dans la base de données
-    // ceci est une tâche assynchrone donc retourne une promise
-    blog.save()
-        .then((result) => {
-            // on renvoie le resulat
-            res.send(result)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-})
+//     // on sauvegarde le document dans la base de données
+//     // ceci est une tâche assynchrone donc retourne une promise
+//     blog.save()
+//         .then((result) => {
+//             // on renvoie le resulat
+//             res.send(result)
+//         })
+//         .catch((err) => {
+//             console.log(err)
+//         })
+// })
 
 // on veut afficher tous les documents de la collection blogs
-app.get('/all-blogs', (req, res) => {
-    Blog.find()
-        .then((result) =>{
-            res.send(result)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-})
+// app.get('/all-blogs', (req, res) => {
+//     Blog.find()
+//         .then((result) =>{
+//             res.send(result)
+//         })
+//         .catch((err) => {
+//             console.log(err)
+//         })
+// })
 
 // un seul blog
 // il faut noter que le id dans mongodb n'est pas un string mais mongoose nous assure la conversion en string. 
-app.get('/single-blog', (req, res) => {
-    Blog.findById('62f15dbf005b9f5ef7676608')
-        .then((result) => {
-            res.send(result)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-})
+// app.get('/single-blog', (req, res) => {
+//     Blog.findById('62f15dbf005b9f5ef7676608')
+//         .then((result) => {
+//             res.send(result)
+//         })
+//         .catch((err) => {
+//             console.log(err)
+//         })
+// })
 
 app.get('/', (req, res) => {
     // on peut utiliser res.write et res.end 
@@ -95,12 +95,24 @@ app.get('/', (req, res) => {
     // sendfile prend en deuxième argument le repertoire dans lequel le fichier est relatif
     // on ne va pas send mais plus render 
     //res.sendFile('./client&servers/views/index.html', {root: __dirname});
-    const blogs = [
-        {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.'},
-        {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.'},
-        {title: 'Link finds money', snippet: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.'},
-    ];
-    res.render('index', {title: 'Home', blogs});
+    // const blogs = [
+    //     {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.'},
+    //     {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.'},
+    //     {title: 'Link finds money', snippet: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem.'},
+    // ];
+    // res.render('index', {title: 'Home', blogs});
+    res.redirect('/blogs');
+
+})
+
+app.get('/blogs', (req, res) => {
+    Blog.find().sort({ createdAt: 'desc' })
+        .then((result) => {
+            res.render('index', {title: 'All Blogs', blogs: result})
+        }).catch((err) => {
+            console.log(err)
+        }
+        )
 })
 
 app.get('/about', (req, res) => {
