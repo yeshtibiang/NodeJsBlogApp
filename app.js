@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 
 // express app 
 // on cré une instance de express app
@@ -11,6 +12,20 @@ app.set('view engine', 'ejs');
 // listen for requests 
 // cela renvoie un serveur qu'on peut utiliser pour des websockets
 app.listen(3000);
+
+// middleware & static files (css, js, images)
+app.use(express.static('public'));
+// donc maintenant si on met css dans public elle sera accessible dans notre site web. 
+
+// middleware
+// app.use((req, res, next) => {
+//     console.log('request made')
+//     console.log('host: ', req.hostname)
+//     console.log('path: ', req.path)
+//     console.log('method: ', req.method)
+//     next();
+// })
+app.use(morgan('dev'))
 
 app.get('/', (req, res) => {
     // on peut utiliser res.write et res.end 
