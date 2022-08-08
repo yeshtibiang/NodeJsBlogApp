@@ -16,12 +16,12 @@ const blogSchema = new Schema({
     body: {
         type: String,
         required: true
-    },
-}, {timestamps: true});
+    }
+}, {timestamps: true})
 
 // est ce qui surround et pourvoit une interface pour manipuler les documents de notre base de données
 // le premier argument est le nom de la collection dans laquelle on veut stocker les documents, c'est important car il va voir ce nom, le plurarilisé et regarder pour la collection dans la base de donnée chaque fois qu'o va utilisé Blog.
 // le deuxième argument est le schema qui décrit la structure des documents que l'on veut stocker dans la base de données
-const Blog = mongoose.model('Blog', 'blogSchema');
+const Blog = mongoose.model('Blog', blogSchema);
 //on export le modème
 module.exports = Blog;

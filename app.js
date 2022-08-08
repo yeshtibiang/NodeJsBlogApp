@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const Blog = require('./models/blogs.js');
 
 // express app 
 // on cré une instance de express app
@@ -14,7 +15,7 @@ mongoose.connect(DBURL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result) => {
         app.listen(3000)
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err))
 
 // on veut par ecouter les requete que si on est connecté à la base de données donc on va mettre le app.listen dans la fontion promisse 
 
@@ -40,6 +41,50 @@ app.use(express.static('public'));
 //     next();
 // })
 app.use(morgan('dev'))
+
+// mongoose et mongo sandbox routes
+app.get('/add-blog', (req, res) => {
+    // creer un nouveau document dans la collection blogs
+    const blog = new Blog({
+        title: 'Test Blog2',
+        snippet: 'This is a test blog2',
+        body: 'This is the body of the test blog2'
+    })
+
+    // on sauvegarde le document dans la base de données
+    // ceci est une tâche assynchrone donc retourne une promise
+    blog.save()
+        .then((result) => {
+            // on renvoie le resulat
+            res.send(result)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+})
+
+// on veut afficher tous les documents de la collection blogs
+app.get('/all-blogs', (req, res) => {
+    Blog.find()
+        .then((result) =>{
+            res.send(result)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+})
+
+// un seul blog
+// il faut noter que le id dans mongodb n'est pas un string mais mongoose nous assure la conversion en string. 
+app.get('/single-blog', (req, res) => {
+    Blog.findById('62f15dbf005b9f5ef7676608')
+        .then((result) => {
+            res.send(result)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+})
 
 app.get('/', (req, res) => {
     // on peut utiliser res.write et res.end 
