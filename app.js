@@ -8,7 +8,7 @@ const Blog = require('./models/blogs.js');
 const app = express();
 
 // url pour se connecter à la base de données 
-const DBURL = 'mongodb+srv://nodejsuser:dtybaba2015@node-yesh.590lq0u.mongodb.net/node-tuto?retryWrites=true&w=majority';
+const DBURL = 'mongodb+srv://nodejsuser:passer123@node-yesh.590lq0u.mongodb.net/node-tuto?retryWrites=true&w=majority';
 // se connecter à la base de données
 // il faut note que ceci est une méthode assynchrone donc elle retourne un promise
 mongoose.connect(DBURL, { useNewUrlParser: true, useUnifiedTopology: true })
