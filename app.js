@@ -1,9 +1,23 @@
 const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 
 // express app 
 // on cré une instance de express app
 const app = express();
+
+// url pour se connecter à la base de données 
+const DBURL = 'mongodb+srv://nodejsuser:dtybaba2015@node-yesh.590lq0u.mongodb.net/node-tuto?retryWrites=true&w=majority';
+// se connecter à la base de données
+// il faut note que ceci est une méthode assynchrone donc elle retourne un promise
+mongoose.connect(DBURL, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then((result) => {
+        app.listen(3000)
+    })
+    .catch((err) => console.log(err));
+
+// on veut par ecouter les requete que si on est connecté à la base de données donc on va mettre le app.listen dans la fontion promisse 
+
 
 //on veut dire qu'on veut utiliser ejs comme notre template engine
 app.set('view engine', 'ejs');
@@ -11,7 +25,7 @@ app.set('view engine', 'ejs');
 
 // listen for requests 
 // cela renvoie un serveur qu'on peut utiliser pour des websockets
-app.listen(3000);
+// app.listen(3000);
 
 // middleware & static files (css, js, images)
 app.use(express.static('public'));
