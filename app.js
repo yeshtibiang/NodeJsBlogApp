@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const Blog = require('./models/blogs.js');
+const blogRouter = require('./routes/blogRoutes');   
 
 
 // express app 
@@ -108,60 +108,9 @@ app.get('/', (req, res) => {
 
 })
 
-app.get('/blogs', (req, res) => {
-    Blog.find().sort({ createdAt: 'desc' })
-        .then((result) => {
-            res.render('index', {title: 'All Blogs', blogs: result})
-        }).catch((err) => {
-            console.log(err)
-        }
-        )
-})
-
-app.get('/blogs/create', (req, res) => {
-    res.render('create', {title: 'Create a new blog'});
-})
-
-// post handler 
-app.post('/blogs', (req, res) => {
-    const blog = new Blog(req.body);
-    blog.save()
-        .then((result) => {
-            res.redirect('/blogs')
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-})
-
-// route parameter handler
-app.get('/blogs/:id', (req, res) => {
-    const id = req.params.id;
-    Blog.findById(id)
-        .then((result) => {
-            res.render('details', {blog: result, title: 'Blog Details'})
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-})
-
-// handle a delete request
-app.delete('/blogs/:id', (req, res) => {
-    const id = req.params.id;
-
-    // on ne fait pas une redirection on va plutot envoyer les données aux navigateurs au format json
-    // puisque dans le javascript on fait de l'ajax request, quand  on fait ce type de requête dans node on ne peut pas utiliser de redirection on doit
-    // envoyer soit du text ou du json au navigateur qui va contenir la redirection
-    Blog.findByIdAndDelete(id)
-        .then((result) => {
-            //on envoie un json object au navigateur
-            res.json({redirect: '/blogs'})
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-})
+// routes pour les blogs
+// on peut avoir comme paramètre un scope pour les routes
+app.use('/blogs', blogRouter);
 
 app.get('/about', (req, res) => {
     //res.send('<p>About Page</p>');
